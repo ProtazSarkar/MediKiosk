@@ -1,0 +1,23 @@
+# Environment and sensitive keys
+.env
+.env.local
+
+# Python bytecode and cache
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+
+# User storage (chat logs and generated PDF reports)
+storage/
+
+# Virtual environment
+venv/
+.venv/
+env/
+
+# IDE / OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
