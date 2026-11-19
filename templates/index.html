@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MediKiosk | AI Medical Consultation Assistant</title>
+    <title>MediKiosk | Clinical RAG & Diagnostic Triage Engine</title>
     <!-- Modern Typography: Inter & Outfit -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -22,10 +22,10 @@
             --assistant-bg: #ffffff;
             --assistant-border: #e2e8f0;
             --assistant-color: #1e293b;
-            --bg-body: #f8fafc;
+            --bg-body: #f1f5f9;
             --shadow-card: 0 20px 25px -5px rgba(15, 23, 42, 0.08), 0 8px 10px -6px rgba(15, 23, 42, 0.04);
-            --radius-lg: 18px;
-            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-md: 10px;
         }
 
         * {
@@ -45,10 +45,10 @@
             padding: 16px;
         }
 
-        .kiosk-card {
+        .kiosk-container {
             width: 100%;
-            max-width: 760px;
-            height: 90vh;
+            max-width: 1240px;
+            height: 94vh;
             background: #ffffff;
             border-radius: var(--radius-lg);
             box-shadow: var(--shadow-card);
@@ -63,11 +63,12 @@
         .kiosk-header {
             background: var(--primary-gradient);
             color: #ffffff;
-            padding: 18px 24px;
+            padding: 14px 24px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             box-shadow: 0 4px 12px rgba(15, 23, 42, 0.15);
+            z-index: 10;
         }
 
         .header-brand {
@@ -77,12 +78,12 @@
         }
 
         .brand-icon {
-            width: 44px;
-            height: 44px;
+            width: 42px;
+            height: 42px;
             background: rgba(255, 255, 255, 0.15);
             backdrop-filter: blur(8px);
             border: 1px solid rgba(255, 255, 255, 0.25);
-            border-radius: 12px;
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -92,14 +93,14 @@
 
         .brand-title {
             font-family: 'Outfit', sans-serif;
-            font-size: 20px;
+            font-size: 19px;
             font-weight: 700;
             letter-spacing: -0.02em;
             color: #ffffff;
         }
 
         .brand-subtitle {
-            font-size: 12px;
+            font-size: 11.5px;
             color: #94a3b8;
             display: flex;
             align-items: center;
@@ -120,26 +121,30 @@
             gap: 12px;
         }
 
-        .badge-counter {
+        .judge-pill {
             background: rgba(255, 255, 255, 0.12);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 6px 12px;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            padding: 6px 14px;
             border-radius: 20px;
-            font-size: 13px;
+            font-size: 12.5px;
             font-weight: 600;
             color: #e2e8f0;
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
+        }
+
+        .judge-pill i {
+            color: #38bdf8;
         }
 
         .btn-reset {
             background: rgba(255, 255, 255, 0.1);
             border: 1px solid rgba(255, 255, 255, 0.25);
             color: #ffffff;
-            padding: 7px 14px;
+            padding: 6px 12px;
             border-radius: 8px;
-            font-size: 13px;
+            font-size: 12.5px;
             font-weight: 500;
             cursor: pointer;
             transition: all 0.2s ease;
@@ -150,14 +155,29 @@
 
         .btn-reset:hover {
             background: rgba(255, 255, 255, 0.2);
-            transform: translateY(-1px);
         }
 
-        /* Banner for Download */
+        /* Main Workspace Split */
+        .workspace {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        /* Left Chat Stream */
+        .chat-column {
+            flex: 1.35;
+            display: flex;
+            flex-direction: column;
+            background: #ffffff;
+            border-right: 1px solid #e2e8f0;
+            overflow: hidden;
+        }
+
         .download-banner {
             background: linear-gradient(135deg, #064e3b 0%, #047857 100%);
             color: #ffffff;
-            padding: 14px 20px;
+            padding: 12px 20px;
             display: none;
             animation: slideDown 0.3s ease-out;
         }
@@ -175,46 +195,108 @@
         }
 
         .banner-text {
-            font-size: 14px;
+            font-size: 13.5px;
             font-weight: 500;
         }
 
         .btn-download {
             background: #ffffff;
             color: #047857;
-            padding: 8px 16px;
+            padding: 7px 14px;
             border-radius: 8px;
             font-weight: 700;
-            font-size: 13px;
+            font-size: 12.5px;
             text-decoration: none;
             display: inline-flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
             transition: all 0.2s ease;
         }
 
         .btn-download:hover {
             background: #f0fdf4;
-            transform: scale(1.03);
+            transform: scale(1.02);
         }
 
-        /* Chat Area */
         .chat-area {
             flex: 1;
-            padding: 24px;
+            padding: 20px;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
-            gap: 18px;
+            gap: 16px;
             background: #f8fafc;
             scroll-behavior: smooth;
+        }
+
+        /* Intake Upload Prompt Card */
+        .intake-upload-card {
+            background: #f0f9ff;
+            border: 1.5px dashed #0284c7;
+            border-radius: var(--radius-md);
+            padding: 14px 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            box-shadow: 0 2px 6px rgba(2, 132, 199, 0.06);
+            margin-bottom: 4px;
+        }
+
+        .intake-upload-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .intake-upload-icon {
+            width: 38px;
+            height: 38px;
+            background: #e0f2fe;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #0284c7;
+            font-size: 18px;
+        }
+
+        .intake-upload-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: #0369a1;
+        }
+
+        .intake-upload-sub {
+            font-size: 11.5px;
+            color: #64748b;
+        }
+
+        .btn-intake-browse {
+            background: #0284c7;
+            color: #ffffff;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-size: 12.5px;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+            transition: all 0.2s ease;
+        }
+
+        .btn-intake-browse:hover {
+            background: #0369a1;
         }
 
         .message-wrapper {
             display: flex;
             flex-direction: column;
-            max-width: 82%;
+            max-width: 88%;
             animation: fadeIn 0.25s ease-in-out;
         }
 
@@ -244,86 +326,50 @@
         }
 
         .bubble {
-            padding: 14px 18px;
+            padding: 13px 17px;
             border-radius: var(--radius-md);
-            font-size: 14.5px;
+            font-size: 14px;
             line-height: 1.55;
+            position: relative;
             word-wrap: break-word;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03);
         }
 
         .bubble-user {
             background: var(--user-bg);
             color: var(--user-color);
-            border-bottom-right-radius: 2px;
             border: 1px solid #bae6fd;
+            border-bottom-right-radius: 2px;
             font-weight: 500;
         }
 
         .bubble-assistant {
             background: var(--assistant-bg);
             color: var(--assistant-color);
-            border-bottom-left-radius: 2px;
             border: 1px solid var(--assistant-border);
+            border-bottom-left-radius: 2px;
+            box-shadow: 0 2px 4px rgba(15, 23, 42, 0.03);
         }
 
-        .bubble-assistant p {
-            margin-bottom: 8px;
-        }
-        .bubble-assistant p:last-child {
-            margin-bottom: 0;
+        .bubble-assistant strong, .bubble-assistant b {
+            color: #0f172a;
+            font-weight: 600;
         }
 
-        .bubble-assistant ul, .bubble-assistant ol {
-            margin-left: 20px;
-            margin-bottom: 8px;
-        }
-
-        /* Starter Chips */
-        .starter-chips {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-top: 12px;
-        }
-
-        .chip {
-            background: #ffffff;
-            border: 1px solid #cbd5e1;
-            color: #0369a1;
-            padding: 8px 14px;
-            border-radius: 20px;
-            font-size: 13px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
-        }
-
-        .chip:hover {
-            background: #e0f2fe;
-            border-color: #0284c7;
-            transform: translateY(-1px);
-        }
-
-        /* Typing Indicator */
+        /* Typing indicator */
         .typing-indicator {
             display: none;
             align-self: flex-start;
             background: #ffffff;
             border: 1px solid #e2e8f0;
-            padding: 12px 18px;
+            padding: 10px 16px;
             border-radius: var(--radius-md);
-            border-bottom-left-radius: 2px;
-        }
-
-        .dots {
-            display: flex;
+            gap: 8px;
             align-items: center;
-            gap: 5px;
+            font-size: 12.5px;
+            color: #64748b;
         }
 
-        .dot {
+        .typing-dot {
             width: 7px;
             height: 7px;
             background: #94a3b8;
@@ -331,332 +377,805 @@
             animation: bounce 1.4s infinite ease-in-out both;
         }
 
-        .dot:nth-child(1) { animation-delay: -0.32s; }
-        .dot:nth-child(2) { animation-delay: -0.16s; }
+        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
 
         @keyframes bounce {
             0%, 80%, 100% { transform: scale(0); }
-            40% { transform: scale(1.0); }
+            40% { transform: scale(1); }
         }
 
-        /* Input Area */
-        .input-area {
-            padding: 18px 24px;
+        /* Input Controls */
+        .input-bar {
+            padding: 14px 20px;
             background: #ffffff;
             border-top: 1px solid #e2e8f0;
             display: flex;
-            gap: 12px;
             align-items: center;
+            gap: 10px;
         }
 
-        .input-box {
+        .input-field {
             flex: 1;
-            position: relative;
-        }
-
-        .input-box input {
-            width: 100%;
-            padding: 14px 18px;
-            font-family: inherit;
-            font-size: 14.5px;
-            border: 1.5px solid #cbd5e1;
-            border-radius: 12px;
+            padding: 12px 16px;
+            border: 1px solid #cbd5e1;
+            border-radius: var(--radius-md);
+            font-size: 14px;
             outline: none;
             transition: all 0.2s ease;
-            background: #f8fafc;
+            font-family: inherit;
         }
 
-        .input-box input:focus {
-            background: #ffffff;
-            border-color: #0284c7;
+        .input-field:focus {
+            border-color: var(--primary-accent);
             box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
         }
 
-        .input-box input:disabled {
+        .btn-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: var(--radius-md);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-upload {
             background: #f1f5f9;
-            cursor: not-allowed;
-            color: #94a3b8;
+            color: #0284c7;
+            border: 1px solid #cbd5e1;
+        }
+
+        .btn-upload:hover {
+            background: #e0f2fe;
+            color: #0369a1;
+        }
+
+        .btn-voice {
+            background: #f1f5f9;
+            color: #475569;
+            border: 1px solid #e2e8f0;
+        }
+
+        .btn-voice.listening {
+            background: #fee2e2;
+            color: #dc2626;
+            animation: pulse 1s infinite alternate;
+        }
+
+        @keyframes pulse {
+            from { transform: scale(1); }
+            to { transform: scale(1.08); }
         }
 
         .btn-send {
             background: var(--primary-accent);
             color: #ffffff;
-            border: none;
-            padding: 14px 22px;
-            border-radius: 12px;
-            font-family: inherit;
-            font-size: 14.5px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
+        }
+
+        .btn-send:hover {
+            background: #0274b0;
+        }
+
+        /* Right Diagnostic Intelligence HUD */
+        .hud-column {
+            flex: 1;
+            background: #f8fafc;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            padding: 20px;
+            gap: 16px;
+        }
+
+        .hud-card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: var(--radius-md);
+            padding: 16px;
+            box-shadow: 0 2px 6px rgba(15, 23, 42, 0.03);
+        }
+
+        .hud-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .hud-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 13.5px;
+            font-weight: 700;
+            color: var(--primary);
             display: flex;
             align-items: center;
             gap: 8px;
-            box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
         }
 
-        .btn-send:hover:not(:disabled) {
-            background: #0369a1;
-            transform: translateY(-1px);
-            box-shadow: 0 6px 16px rgba(2, 132, 199, 0.35);
+        .hud-badge {
+            font-size: 11px;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 12px;
+            background: #e0f2fe;
+            color: #0369a1;
         }
 
-        .btn-send:disabled {
-            background: #cbd5e1;
-            box-shadow: none;
-            cursor: not-allowed;
+        /* Readiness Gauge */
+        .readiness-meter {
+            width: 100%;
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 8px 0;
         }
 
-        /* Disclaimer Footer */
-        .kiosk-footer {
-            background: #f1f5f9;
-            padding: 8px 24px;
-            text-align: center;
+        .readiness-fill {
+            height: 100%;
+            width: 10%;
+            background: linear-gradient(90deg, #0284c7 0%, #10b981 100%);
+            transition: width 0.4s ease;
+        }
+
+        .readiness-text {
+            font-size: 12px;
+            color: #64748b;
+            display: flex;
+            justify-content: space-between;
+            font-weight: 500;
+        }
+
+        /* Disease Probability Bars */
+        .disease-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .disease-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .disease-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .disease-dept {
             font-size: 11px;
             color: #64748b;
-            border-top: 1px solid #e2e8f0;
+            font-weight: 400;
+        }
+
+        .disease-prob-val {
+            font-weight: 700;
+            color: var(--primary-accent);
+        }
+
+        .disease-bar-bg {
+            width: 100%;
+            height: 6px;
+            background: #f1f5f9;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .disease-bar-fill {
+            height: 100%;
+            background: #0284c7;
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+
+        /* Digitized Prescriptions List */
+        .doc-entry {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 10px 12px;
+            font-size: 12px;
+        }
+
+        .doc-entry-header {
+            display: flex;
+            justify-content: space-between;
+            font-weight: 600;
+            color: #0f172a;
+            margin-bottom: 4px;
+        }
+
+        .doc-entry-meds {
+            color: #0369a1;
+            font-size: 11.5px;
+        }
+
+        /* Decision Stamps Timeline */
+        .stamps-timeline {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+
+        .stamp-item {
+            position: relative;
+            padding-left: 18px;
+            border-left: 2px solid #cbd5e1;
+        }
+
+        .stamp-item::before {
+            content: '';
+            position: absolute;
+            left: -5px;
+            top: 2px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--primary-accent);
+        }
+
+        .stamp-turn {
+            font-size: 11px;
+            font-weight: 700;
+            color: #0284c7;
+            margin-bottom: 2px;
+        }
+
+        .stamp-hyps {
+            font-size: 12px;
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .stamp-rationale {
+            font-size: 11.5px;
+            color: #64748b;
+            margin-top: 2px;
+            line-height: 1.35;
+        }
+
+        .btn-synthesize {
+            width: 100%;
+            background: #f8fafc;
+            border: 1px dashed #94a3b8;
+            color: #334155;
+            padding: 8px;
+            border-radius: var(--radius-md);
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-top: 10px;
+        }
+
+        .btn-synthesize:hover {
+            background: #f1f5f9;
+            border-color: #0284c7;
+            color: #0284c7;
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .workspace {
+                flex-direction: column;
+            }
+            .hud-column {
+                border-top: 1px solid #e2e8f0;
+                max-height: 320px;
+            }
         }
     </style>
 </head>
 
 <body>
-    <div class="kiosk-card">
+    <div class="kiosk-container">
         <!-- Header -->
         <header class="kiosk-header">
             <div class="header-brand">
                 <div class="brand-icon">
-                    <i class="fa-solid font-hospital-user fa-user-doctor"></i>
+                    <i class="fa-solid fa-stethoscope"></i>
                 </div>
                 <div>
-                    <div class="brand-title">MediKiosk</div>
+                    <h1 class="brand-title">MediKiosk</h1>
                     <div class="brand-subtitle">
-                        <span class="status-dot"></span> Online AI Assistant
+                        <span class="status-dot"></span> Clinical RAG & Triage Decision Engine
                     </div>
                 </div>
             </div>
 
             <div class="header-actions">
-                <div class="badge-counter" id="msgCounter">
-                    <i class="fa-solid fa-comments"></i>
-                    <span id="counterText">0 / 10</span>
+                <div class="judge-pill" id="judgePill">
+                    <i class="fa-solid fa-scale-balanced"></i>
+                    <span id="judgeStatusText">Judge: Assessing</span>
                 </div>
-                <button class="btn-reset" onclick="resetSession()" title="Start New Consultation">
+                <button class="btn-reset" id="resetBtn" title="Reset consultation">
                     <i class="fa-solid fa-rotate-right"></i> Reset
                 </button>
             </div>
         </header>
 
-        <!-- Download Banner -->
-        <div id="downloadBanner" class="download-banner">
+        <!-- Report Download Banner (Appears when Judge confirms decision) -->
+        <div class="download-banner" id="downloadBanner">
             <div class="banner-content">
                 <div class="banner-text">
-                    <i class="fa-solid fa-circle-check"></i> Consultation Complete (10 Messages Limit Reached).
+                    <i class="fa-solid fa-circle-check"></i>
+                    <strong>Consultation Intake Complete!</strong> The Clinical Judge has gathered sufficient evidence.
                 </div>
-                <a id="pdfLink" href="#" class="btn-download" target="_blank">
-                    <i class="fa-solid fa-file-pdf"></i> Download PDF Summary
+                <a href="#" class="btn-download" id="bannerDownloadBtn">
+                    <i class="fa-solid fa-file-pdf"></i> Download Doctor Handover PDF
                 </a>
             </div>
         </div>
 
-        <!-- Chat Area -->
-        <main class="chat-area" id="chatBox">
-            <div class="message-wrapper assistant-wrapper">
-                <div class="msg-sender">MediKiosk Assistant</div>
-                <div class="bubble bubble-assistant">
-                    Hello! I am your AI Medical Assistant. Please describe your symptoms or health questions. 
-                    <br><br><i>Note: This kiosk session allows up to 10 consultation entries, after which a PDF report will be generated.</i>
-                    <div class="starter-chips" id="starterChips">
-                        <button class="chip" onclick="useStarter('I have a headache and low fever.')">Headache & Fever</button>
-                        <button class="chip" onclick="useStarter('Sore throat and persistent cough.')">Sore Throat & Cough</button>
-                        <button class="chip" onclick="useStarter('Stomach discomfort after meals.')">Stomach Discomfort</button>
+        <!-- Main Workspace -->
+        <div class="workspace">
+            <!-- Left: Chat Stream & Controls -->
+            <div class="chat-column">
+                <div class="chat-area" id="chatArea">
+                    <!-- Initial Welcome Message -->
+                    <div class="message-wrapper assistant-wrapper">
+                        <div class="msg-sender">MediKiosk Clinical Assistant</div>
+                        <div class="bubble bubble-assistant">
+                            Hello. I am your <b>Pre-Consultation Intake Assistant</b>.<br/>
+                            If you have brought an <b>old prescription photo</b> or <b>medical PDF report</b>, you can upload it below to digitize your medication and diagnostic history. Otherwise, please describe what symptoms you are experiencing today.
+                        </div>
+                    </div>
+
+                    <!-- Initial Intake Upload Card -->
+                    <div class="intake-upload-card" id="intakeUploadCard">
+                        <div class="intake-upload-info">
+                            <div class="intake-upload-icon">
+                                <i class="fa-solid fa-file-medical"></i>
+                            </div>
+                            <div>
+                                <div class="intake-upload-title">Have a Past Prescription or Medical Record?</div>
+                                <div class="intake-upload-sub">Upload photo (JPG/PNG) or PDF to auto-extract past medications & diagnoses</div>
+                            </div>
+                        </div>
+                        <button class="btn-intake-browse" id="intakeBrowseBtn">
+                            <i class="fa-solid fa-cloud-arrow-up"></i> Upload Record
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Typing / Processing Indicator -->
+                <div class="typing-indicator" id="typingIndicator">
+                    <div style="display: flex; gap: 5px; align-items: center;">
+                        <span class="typing-dot"></span>
+                        <span class="typing-dot"></span>
+                        <span class="typing-dot"></span>
+                    </div>
+                    <span id="typingText">Analyzing clinical input...</span>
+                </div>
+
+                <!-- Input Bar -->
+                <div class="input-bar">
+                    <!-- Hidden File Input -->
+                    <input type="file" id="prescriptionInput" accept=".pdf,.png,.jpg,.jpeg,.webp" style="display: none;" />
+
+                    <button class="btn-icon btn-upload" id="uploadBtn" title="Upload prescription photo or PDF">
+                        <i class="fa-solid fa-paperclip"></i>
+                    </button>
+                    <input type="text" id="userInput" class="input-field" placeholder="Describe symptoms or upload a prescription above..." autocomplete="off" />
+                    <button class="btn-icon btn-voice" id="voiceBtn" title="Speak in your language">
+                        <i class="fa-solid fa-microphone"></i>
+                    </button>
+                    <button class="btn-icon btn-send" id="sendBtn" title="Send message">
+                        <i class="fa-solid fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Right: Diagnostic Intelligence HUD -->
+            <div class="hud-column">
+                <!-- Judge / Gatekeeper Card -->
+                <div class="hud-card">
+                    <div class="hud-card-header">
+                        <div class="hud-title">
+                            <i class="fa-solid fa-gavel text-primary"></i> Decision Gatekeeper
+                        </div>
+                        <span class="hud-badge" id="hudReadinessBadge">0% Complete</span>
+                    </div>
+                    <div class="readiness-meter">
+                        <div class="readiness-fill" id="readinessBar" style="width: 15%;"></div>
+                    </div>
+                    <div class="readiness-text">
+                        <span id="readinessStatus">Gathering Chief Complaint</span>
+                        <span id="readinessTurns">Turn 0</span>
+                    </div>
+                    <button class="btn-synthesize" id="manualSynthesizeBtn">
+                        <i class="fa-solid fa-file-medical"></i> Synthesize Report Now
+                    </button>
+                </div>
+
+                <!-- Digitized Prescriptions Card (Hidden until a record is uploaded) -->
+                <div class="hud-card" id="hudDocsCard" style="display: none;">
+                    <div class="hud-card-header">
+                        <div class="hud-title">
+                            <i class="fa-solid fa-prescription text-accent"></i> Digitized Records
+                        </div>
+                        <span class="hud-badge" id="hudDocsBadge">0 Files</span>
+                    </div>
+                    <div id="hudDocsList" style="display: flex; flex-direction: column; gap: 8px;"></div>
+                </div>
+
+                <!-- Live Differential Diagnoses Probabilities -->
+                <div class="hud-card">
+                    <div class="hud-card-header">
+                        <div class="hud-title">
+                            <i class="fa-solid fa-chart-pie text-accent"></i> Candidate Differentials
+                        </div>
+                        <span class="hud-badge" id="hudCandidateCount">0 Identified</span>
+                    </div>
+                    <div class="disease-list" id="diseaseList">
+                        <div style="font-size: 12.5px; color: #94a3b8; font-style: italic;">
+                            Awaiting initial symptom input or prescription upload to compute RAG differential probabilities...
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Turn-by-Turn Decision Stamps -->
+                <div class="hud-card" style="flex: 1;">
+                    <div class="hud-card-header">
+                        <div class="hud-title">
+                            <i class="fa-solid fa-timeline"></i> Decision Stamps
+                        </div>
+                        <span class="hud-badge" id="stampCountBadge">0 Stamps</span>
+                    </div>
+                    <div class="stamps-timeline" id="stampsTimeline">
+                        <div style="font-size: 12px; color: #94a3b8; font-style: italic;">
+                            Decision stamps will track probability shifts as cross-examination questions are answered.
+                        </div>
                     </div>
                 </div>
             </div>
-        </main>
-
-        <!-- Typing Indicator -->
-        <div class="typing-indicator" id="typingIndicator">
-            <div class="dots">
-                <div class="dot"></div>
-                <div class="dot"></div>
-                <div class="dot"></div>
-            </div>
-        </div>
-
-        <!-- Input Area -->
-        <footer class="input-area">
-            <div class="input-box">
-                <input type="text" id="userInput" placeholder="Describe your symptoms..." autofocus autocomplete="off" />
-            </div>
-            <button class="btn-send" id="sendBtn" onclick="sendMessage()">
-                <span>Send</span> <i class="fa-solid fa-paper-plane"></i>
-            </button>
-        </footer>
-
-        <div class="kiosk-footer">
-            MediKiosk provides preliminary automated triage. For medical emergencies, call your local emergency services immediately.
         </div>
     </div>
 
+    <!-- Scripts -->
     <script>
-        const chatBox = document.getElementById('chatBox');
+        const chatArea = document.getElementById('chatArea');
         const userInput = document.getElementById('userInput');
         const sendBtn = document.getElementById('sendBtn');
-        const downloadBanner = document.getElementById('downloadBanner');
-        const pdfLink = document.getElementById('pdfLink');
-        const counterText = document.getElementById('counterText');
+        const voiceBtn = document.getElementById('voiceBtn');
+        const uploadBtn = document.getElementById('uploadBtn');
+        const intakeBrowseBtn = document.getElementById('intakeBrowseBtn');
+        const prescriptionInput = document.getElementById('prescriptionInput');
+        const resetBtn = document.getElementById('resetBtn');
         const typingIndicator = document.getElementById('typingIndicator');
-        const starterChips = document.getElementById('starterChips');
+        const typingText = document.getElementById('typingText');
+        const downloadBanner = document.getElementById('downloadBanner');
+        const bannerDownloadBtn = document.getElementById('bannerDownloadBtn');
+        const judgeStatusText = document.getElementById('judgeStatusText');
+        const hudReadinessBadge = document.getElementById('hudReadinessBadge');
+        const readinessBar = document.getElementById('readinessBar');
+        const readinessStatus = document.getElementById('readinessStatus');
+        const readinessTurns = document.getElementById('readinessTurns');
+        const diseaseList = document.getElementById('diseaseList');
+        const hudCandidateCount = document.getElementById('hudCandidateCount');
+        const stampsTimeline = document.getElementById('stampsTimeline');
+        const stampCountBadge = document.getElementById('stampCountBadge');
+        const manualSynthesizeBtn = document.getElementById('manualSynthesizeBtn');
+        const hudDocsCard = document.getElementById('hudDocsCard');
+        const hudDocsBadge = document.getElementById('hudDocsBadge');
+        const hudDocsList = document.getElementById('hudDocsList');
 
-        let isProcessing = false;
+        let isWaiting = false;
 
-        document.addEventListener('DOMContentLoaded', () => {
-            loadHistory();
-            userInput.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter' && !isProcessing) sendMessage();
-            });
-        });
-
+        // Load History on Mount
         async function loadHistory() {
             try {
                 const res = await fetch('/history');
                 const data = await res.json();
-                
                 if (data.history && data.history.length > 0) {
-                    if (starterChips) starterChips.style.display = 'none';
-                    data.history.forEach(msg => {
-                        appendMessageBubble(msg.content, msg.role);
-                    });
+                    chatArea.innerHTML = '';
+                    data.history.forEach(m => appendMessage(m.role, m.content));
                 }
-                updateCounter(data.message_count || 0);
-
-                if (data.limit_reached) {
-                    lockInputs(data.pdf_url);
+                if (data.clinical_state) {
+                    updateDiagnosticHUD(data.clinical_state);
+                }
+                if (data.decision_ready && data.pdf_url) {
+                    showDownloadBanner(data.pdf_url);
                 }
             } catch (err) {
-                console.error("Failed to load session history:", err);
+                console.error("Failed to load history:", err);
             }
         }
 
-        async function sendMessage() {
-            const text = userInput.value.trim();
-            if (!text || isProcessing) return;
+        loadHistory();
 
-            if (starterChips) starterChips.style.display = 'none';
-
-            appendMessageBubble(text, 'user');
-            userInput.value = '';
-            setLoading(true);
-
-            try {
-                const res = await fetch('/chat', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ message: text })
-                });
-
-                const data = await res.json();
-                setLoading(false);
-
-                if (data.error) {
-                    alert(data.error);
-                } else {
-                    appendMessageBubble(data.response, 'assistant');
-                    updateCounter(data.message_count);
-
-                    if (data.limit_reached) {
-                        lockInputs(data.pdf_url);
-                    }
-                }
-            } catch (err) {
-                setLoading(false);
-                alert('Failed to send message. Please check connection.');
-            }
-        }
-
-        function useStarter(text) {
-            userInput.value = text;
-            sendMessage();
-        }
-
-        function appendMessageBubble(text, sender) {
-            const isUser = (sender === 'user');
+        function appendMessage(role, content) {
             const wrapper = document.createElement('div');
-            wrapper.className = `message-wrapper ${isUser ? 'user-wrapper' : 'assistant-wrapper'}`;
+            wrapper.className = `message-wrapper ${role === 'user' ? 'user-wrapper' : 'assistant-wrapper'}`;
 
-            const senderLabel = document.createElement('div');
-            senderLabel.className = 'msg-sender';
-            senderLabel.innerText = isUser ? 'Patient' : 'MediKiosk Assistant';
+            const sender = document.createElement('div');
+            sender.className = 'msg-sender';
+            sender.textContent = role === 'user' ? 'Patient' : 'MediKiosk Assistant';
 
             const bubble = document.createElement('div');
-            bubble.className = `bubble ${isUser ? 'bubble-user' : 'bubble-assistant'}`;
+            bubble.className = `bubble ${role === 'user' ? 'bubble-user' : 'bubble-assistant'}`;
+            bubble.innerHTML = formatMarkdown(content);
 
-            if (isUser) {
-                bubble.innerText = text;
-            } else {
-                bubble.innerHTML = formatMarkdown(text);
-            }
-
-            wrapper.appendChild(senderLabel);
+            wrapper.appendChild(sender);
             wrapper.appendChild(bubble);
-            chatBox.appendChild(wrapper);
-
-            scrollToBottom();
+            chatArea.appendChild(wrapper);
+            chatArea.scrollTop = chatArea.scrollHeight;
         }
 
         function formatMarkdown(text) {
             if (!text) return '';
             let formatted = text
-                .replace(/&/g, "&amp;")
-                .replace(/</g, "&lt;")
-                .replace(/>/g, "&gt;");
-
-            // Convert **bold**
-            formatted = formatted.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
-            // Convert *italic*
-            formatted = formatted.replace(/\*(.*?)\*/g, '<i>$1</i>');
-            // Convert newlines
-            formatted = formatted.replace(/\n/g, '<br>');
-
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                .replace(/• /g, '&bull; ')
+                .replace(/\n/g, '<br/>');
             return formatted;
         }
 
-        function updateCounter(count) {
-            counterText.innerText = `${count} / 10`;
-        }
+        function updateDiagnosticHUD(state) {
+            if (!state) return;
 
-        function setLoading(loading) {
-            isProcessing = loading;
-            userInput.disabled = loading;
-            sendBtn.disabled = loading;
-            typingIndicator.style.display = loading ? 'block' : 'none';
-            if (loading) scrollToBottom();
-            else userInput.focus();
-        }
+            // Update Readiness Score & Gatekeeper
+            const score = state.readiness_score || 0;
+            readinessBar.style.width = `${Math.max(score, 10)}%`;
+            hudReadinessBadge.textContent = `${score}% Ready`;
+            judgeStatusText.textContent = state.decision_ready ? 'Decision Ready' : `Judge: ${score}%`;
 
-        function lockInputs(pdfUrl) {
-            userInput.disabled = true;
-            sendBtn.disabled = true;
-            userInput.placeholder = "Session complete. Download PDF summary report above.";
-            if (pdfUrl) {
-                pdfLink.href = pdfUrl;
-                downloadBanner.style.display = 'block';
+            if (state.decision_ready) {
+                readinessStatus.textContent = 'Clinical Decision Finalized';
+            } else if (score >= 60) {
+                readinessStatus.textContent = 'Verifying Pertinent Differentials';
+            } else if (score >= 40) {
+                readinessStatus.textContent = 'Cross-Examining Symptoms';
+            } else {
+                readinessStatus.textContent = 'Gathering Chief Complaint';
+            }
+
+            const turnCount = (state.decision_stamps || []).length;
+            readinessTurns.textContent = `Turn ${turnCount}`;
+
+            // Update Uploaded Documents Card
+            const docs = state.uploaded_documents || [];
+            if (docs.length > 0) {
+                hudDocsCard.style.display = 'block';
+                hudDocsBadge.textContent = `${docs.length} Uploaded`;
+                hudDocsList.innerHTML = '';
+                docs.forEach(d => {
+                    const entry = document.createElement('div');
+                    entry.className = 'doc-entry';
+                    const meds = (d.medications || []).join(', ') || 'No active meds';
+                    entry.innerHTML = `
+                        <div class="doc-entry-header">
+                            <span><i class="fa-solid fa-file-lines text-primary"></i> ${d.file_name}</span>
+                            <span style="font-size: 10.5px; color: #64748b;">${d.file_type || 'Doc'}</span>
+                        </div>
+                        <div class="doc-entry-meds"><b>Rx:</b> ${meds}</div>
+                    `;
+                    hudDocsList.appendChild(entry);
+                });
+            }
+
+            // Update Disease Probabilities
+            const hyps = state.current_hypotheses || [];
+            hudCandidateCount.textContent = `${hyps.length} Evaluated`;
+
+            if (hyps.length > 0) {
+                diseaseList.innerHTML = '';
+                hyps.forEach(h => {
+                    const item = document.createElement('div');
+                    item.className = 'disease-item';
+                    item.innerHTML = `
+                        <div class="disease-header">
+                            <div>
+                                <span>${h.name}</span>
+                                <span class="disease-dept">(${h.department || 'OPD'})</span>
+                            </div>
+                            <span class="disease-prob-val">${h.probability}%</span>
+                        </div>
+                        <div class="disease-bar-bg">
+                            <div class="disease-bar-fill" style="width: ${h.probability}%;"></div>
+                        </div>
+                    `;
+                    diseaseList.appendChild(item);
+                });
+            }
+
+            // Update Decision Stamps
+            const stamps = state.decision_stamps || [];
+            stampCountBadge.textContent = `${stamps.length} Stamps`;
+
+            if (stamps.length > 0) {
+                stampsTimeline.innerHTML = '';
+                stamps.forEach(s => {
+                    const div = document.createElement('div');
+                    div.className = 'stamp-item';
+                    const hypText = (s.hypotheses || []).map(h => `${h.name} (${h.probability}%)`).join(', ');
+                    div.innerHTML = `
+                        <div class="stamp-turn">Turn ${s.turn} &bull; ${s.timestamp || ''}</div>
+                        <div class="stamp-hyps">${hypText}</div>
+                        <div class="stamp-rationale">${s.rationale || ''}</div>
+                    `;
+                    stampsTimeline.appendChild(div);
+                });
+                stampsTimeline.scrollTop = stampsTimeline.scrollHeight;
             }
         }
 
-        async function resetSession() {
-            if (confirm("Start a new medical consultation session? Your current progress will be reset.")) {
-                try {
-                    await fetch('/reset', { method: 'POST' });
-                    window.location.reload();
-                } catch (e) {
-                    alert("Failed to reset session.");
+        function showDownloadBanner(url) {
+            downloadBanner.style.display = 'block';
+            bannerDownloadBtn.href = url;
+        }
+
+        // Handle Text Messages
+        async function sendMessage() {
+            const msg = userInput.value.trim();
+            if (!msg || isWaiting) return;
+
+            appendMessage('user', msg);
+            userInput.value = '';
+            isWaiting = true;
+            typingText.textContent = 'Cross-examining symptoms with clinical RAG...';
+            typingIndicator.style.display = 'flex';
+            chatArea.scrollTop = chatArea.scrollHeight;
+
+            try {
+                const res = await fetch('/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: msg })
+                });
+                const data = await res.json();
+                typingIndicator.style.display = 'none';
+                isWaiting = false;
+
+                if (data.response) {
+                    appendMessage('assistant', data.response);
                 }
+                if (data.clinical_state) {
+                    updateDiagnosticHUD(data.clinical_state);
+                }
+                if (data.decision_ready && data.pdf_url) {
+                    showDownloadBanner(data.pdf_url);
+                }
+            } catch (err) {
+                typingIndicator.style.display = 'none';
+                isWaiting = false;
+                appendMessage('assistant', 'Sorry, I encountered an issue analyzing your input. Please try again.');
             }
         }
 
-        function scrollToBottom() {
-            chatBox.scrollTop = chatBox.scrollHeight;
+        sendBtn.addEventListener('click', sendMessage);
+        userInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') sendMessage();
+        });
+
+        // Trigger File Input from Buttons
+        uploadBtn.addEventListener('click', () => prescriptionInput.click());
+        if (intakeBrowseBtn) {
+            intakeBrowseBtn.addEventListener('click', () => prescriptionInput.click());
+        }
+
+        // Handle Prescription / Document Upload
+        prescriptionInput.addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            appendMessage('user', `Uploaded prescription/record: 📎 <strong>${file.name}</strong>`);
+            isWaiting = true;
+            typingText.textContent = `Digitizing ${file.name} & extracting clinical entities...`;
+            typingIndicator.style.display = 'flex';
+            chatArea.scrollTop = chatArea.scrollHeight;
+
+            try {
+                const res = await fetch('/upload_document', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await res.json();
+                typingIndicator.style.display = 'none';
+                isWaiting = false;
+
+                if (data.assistant_message) {
+                    appendMessage('assistant', data.assistant_message);
+                }
+                if (data.clinical_state) {
+                    updateDiagnosticHUD(data.clinical_state);
+                }
+            } catch (err) {
+                typingIndicator.style.display = 'none';
+                isWaiting = false;
+                appendMessage('assistant', 'Failed to digitize the uploaded document. Please check the file and try again.');
+            } finally {
+                prescriptionInput.value = '';
+            }
+        });
+
+        // Manual Synthesize Trigger
+        manualSynthesizeBtn.addEventListener('click', async () => {
+            manualSynthesizeBtn.disabled = true;
+            manualSynthesizeBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Generating...';
+            try {
+                const res = await fetch('/generate_report', { method: 'POST' });
+                const data = await res.json();
+                if (data.clinical_state) {
+                    updateDiagnosticHUD(data.clinical_state);
+                }
+                if (data.pdf_url) {
+                    showDownloadBanner(data.pdf_url);
+                }
+                appendMessage('assistant', 'I have synthesized your complete clinical pre-consultation report based on our discussion and uploaded records. You can download the handover PDF above.');
+            } catch (err) {
+                console.error("Synthesize error:", err);
+            } finally {
+                manualSynthesizeBtn.disabled = false;
+                manualSynthesizeBtn.innerHTML = '<i class="fa-solid fa-file-medical"></i> Synthesize Report Now';
+            }
+        });
+
+        // Reset Consultation
+        resetBtn.addEventListener('click', async () => {
+            if (confirm("Reset current consultation and start fresh?")) {
+                await fetch('/reset', { method: 'POST' });
+                location.reload();
+            }
+        });
+
+        // Web Speech API for Regional Voice Intake
+        let recognition = null;
+        if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+            const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+            recognition = new SpeechRec();
+            recognition.continuous = false;
+            recognition.interimResults = false;
+            recognition.lang = 'en-US';
+
+            recognition.onstart = () => {
+                voiceBtn.classList.add('listening');
+            };
+
+            recognition.onresult = (event) => {
+                const transcript = event.results[0][0].transcript;
+                userInput.value = transcript;
+                voiceBtn.classList.remove('listening');
+                sendMessage();
+            };
+
+            recognition.onerror = () => {
+                voiceBtn.classList.remove('listening');
+            };
+
+            recognition.onend = () => {
+                voiceBtn.classList.remove('listening');
+            };
+
+            voiceBtn.addEventListener('click', () => {
+                if (voiceBtn.classList.contains('listening')) {
+                    recognition.stop();
+                } else {
+                    recognition.start();
+                }
+            });
+        } else {
+            voiceBtn.style.display = 'none';
         }
     </script>
 </body>
